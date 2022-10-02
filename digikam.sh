@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-set -x
+launched=0
 
 get_script_path () {
   SOURCE=${BASH_SOURCE[0]}
@@ -16,6 +16,10 @@ get_script_path () {
 path=$( get_script_path )
 cd -- "$path"
 
+if [[ ! -d "darkorange-pyside-stylesheet" ]]; then
+  git submodule update
+fi
+
 for i in *.appimage.extracted; do
   appimage_extracted=$i
 done
@@ -28,8 +32,14 @@ done
 ulimit -S -c 0 2> /dev/null
 
 if [[ -n "$appimage_extracted" ]]; then
+  launched=1
   "$path/$appimage_extracted/AppRun" "$@" -stylesheet "$path/darkorange-pyside-stylesheet/darkorange/darkorange.qss"
 elif [[ -n "$appimage" ]]; then
+  launched=1
   "$path/$appimage" -stylesheet "$path/darkorange-pyside-stylesheet/darkorange/darkorange.qss" "$@"
+fi
+
+if [[ "$launched" != "1" ]]; then
+  echo "Missing appimage into repo directory $path"
 fi
   
