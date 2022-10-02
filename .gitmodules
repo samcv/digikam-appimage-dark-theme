@@ -1,0 +1,3 @@
+[submodule "darkorange-pyside-stylesheet"]
+	path = darkorange-pyside-stylesheet
+	url = git@github.com:samcv/darkorange-pyside-stylesheet.git
